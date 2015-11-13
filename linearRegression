@@ -36,7 +36,7 @@ def crossValidation(descripterIndex, inputLists):
         err = dp.rmsErr(predict, regData)
 
         rmsErr.append(err)
-        return rmsErr
+    return rmsErr
 
 '''
     train the linear model with whole data set, use only the descripters provided in parameter
