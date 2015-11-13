@@ -1,0 +1,58 @@
+__author__ = 'haotian'
+
+from sklearn.linear_model.base import LinearRegression
+import dataProcess as dp
+import random
+import pylab as P
+
+
+
+'''
+    run 20% out cross validation on each of the inputLists, use only the descripters provided in parameter
+    first 20% of each list is used for prediciton and the rest 80% is used for model training
+    assume the last element of each line is the data being predicted
+'''
+def crossValidation(descripterIndex, inputLists):
+
+    rmsErr = []
+
+    for inputList in inputLists:
+
+        descripter = dp.writeDescripter(inputList, descripterIndex)
+        data = []
+
+        for line in inputList:
+            data.append(line[-1])
+
+        trainingDescripter = descripter[len(descripter)/5:]
+        trainingData = data[len(data)/5:]
+
+        regDescripter = descripter[:len(descripter)/5]
+        regData = data[:len(data)/5]
+
+        reg = LinearRegression()
+        reg.fit(trainingDescripter, trainingData)
+        predict = reg.predict(regDescripter)
+        err = dp.rmsErr(predict, regData)
+
+        rmsErr.append(err)
+        return rmsErr
+
+'''
+    train the linear model with whole data set, use only the descripters provided in parameter
+    use the model to predict whole data set
+    return the rms err
+'''
+def wholeSetPrediction(descripterIndex, inputList):
+    descripter = dp.writeDescripter(inputList, descripterIndex)
+    data = []
+
+    for line in inputList:
+        data.append(line[-1])
+
+    reg = LinearRegression()
+    reg.fit(descripter, data)
+    predict = reg.predict(descripter)
+    err = dp.rmsErr(predict, data)
+
+    return err
