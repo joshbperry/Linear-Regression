@@ -1,0 +1,55 @@
+import matplotlib.pyplot as plt
+import numpy as np
+from sklearn import datasets, linear_model
+from matplotlib.ticker import MultipleLocator
+
+
+f = open("CSV_filename.csv")    #opens the file
+f.readline()    # gets rid of the first row (the labels)
+
+data =  np.loadtxt(f, delimiter = ',')  #makes file into numpy array
+dataTemp = data[:, np.newaxis]
+
+# these numbers corrispond to columns in the spreadsheet
+#                   |
+#                   V
+a = (dataTemp[:, :, 0])
+b = (dataTemp[:, :, 1])
+c = (dataTemp[:, :, 2])
+d = (dataTemp[:, :, 3])
+e = (dataTemp[:, :, 4])
+f = (dataTemp[:, :, 5])
+g = (dataTemp[:, :, 6])
+h = (dataTemp[:, :, 7])
+i = (dataTemp[:, :, 8])
+# you can add as many X-variables as you want
+
+Ydata = (dataTemp[:, :, 9])  # Y-variable is in collumn 9 (J)
+Xdata = np.concatenate((a, b, c, d, e, f, g, h ,i), axis=1) #puts all the X-variables into a numpy array
+
+Xdata_train = Xdata
+Xdata_test = Xdata
+Ydata_train = Ydata
+Ydata_test = Ydata
+
+regr = linear_model.LinearRegression()
+
+# Train the model using the training sets
+regr.fit(Xdata_train, Ydata_train)
+
+# The coefficients
+print('Coefficients: \n', regr.coef_)
+
+# calculate rms
+rms = np.sqrt(np.mean(((regr.predict(Xdata_test)) - Ydata_test) ** 2))
+print('RMS:', rms)
+
+# Plot outputs
+plt.scatter((regr.predict(Xdata_test)), (Ydata_test), color='black')
+
+# plot predicted=actual line on graph from (-50, -50) to (600, 600)
+plt.plot((-50, 600), (-50, 600), color='blue', linewidth=3)
+
+plt.show()
+
+f.close()
