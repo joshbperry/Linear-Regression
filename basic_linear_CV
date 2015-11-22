@@ -1,0 +1,51 @@
+import matplotlib.pyplot as plt
+import numpy as np
+from sklearn import datasets, linear_model
+from sklearn.cross_validation import train_test_split
+
+f = open("filename.csv")
+f.readline()
+
+data =  np.loadtxt(f, delimiter = ',')
+dataTemp = data[:, np.newaxis]
+
+# add descriptors in this format
+# these numbers corispond to collumn nubers
+#                   |
+#                   V
+a = (dataTemp[:, :, 0])
+b = (dataTemp[:, :, 1])
+c = (dataTemp[:, :, 2])
+d = (dataTemp[:, :, 3])
+e = (dataTemp[:, :, 4])
+f = (dataTemp[:, :, 5])
+
+Ydata = (dataTemp[:, :, 6]) #experimental variable is in the 7th collumn
+Xdata = np.concatenate((a,b,c,d,e,f), axis=1) #<- put all descriptors in here
+
+RMS_List = []
+
+n=0
+while (n < 200):
+    #split into training and testing datasets
+    X_train, X_test, Y_train, Y_test = train_test_split(Xdata, Ydata, test_size=0.8)
+
+    regr = linear_model.LinearRegression()
+
+    # Train the model using the training sets
+    regr.fit(X_train, ((Y_train)))
+    
+    # calculate rms
+    rms = np.sqrt(np.mean(((regr.predict(X_test)) - Y_test)**2 ))
+    #print('RMS:', rms)
+    RMS_List.append(rms)
+    
+    n = n+1
+
+maxRMS = np.amax(RMS_List)
+minRMS = np.amin(RMS_List)
+avgRMS = np.mean(RMS_List)
+
+print(maxRMS, minRMS, avgRMS)
+
+f.close()
