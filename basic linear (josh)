@@ -4,7 +4,7 @@ from sklearn import datasets, linear_model
 from matplotlib.ticker import MultipleLocator
 
 
-f = open("CSV_filename.csv")    #opens the file
+f = open("filename.csv")    #opens the file
 f.readline()    # gets rid of the first row (the labels)
 
 data =  np.loadtxt(f, delimiter = ',')  #makes file into numpy array
@@ -22,11 +22,12 @@ f = (dataTemp[:, :, 5])
 g = (dataTemp[:, :, 6])
 h = (dataTemp[:, :, 7])
 i = (dataTemp[:, :, 8])
-# you can add as many X-variables as you want
+# you can add as many descriptors as you want
 
 Ydata = (dataTemp[:, :, 9])  # Y-variable is in collumn 9 (J)
-Xdata = np.concatenate((a, b, c, d, e, f, g, h ,i), axis=1) #puts all the X-variables into a numpy array
+Xdata = np.concatenate((a, b, c, d, e, f, g, h ,i), axis=1)   #puts all the descriptors into a numpy array
 
+#splits into testing and training datasets (not used for anything currently)
 Xdata_train = Xdata
 Xdata_test = Xdata
 Ydata_train = Ydata
@@ -44,8 +45,8 @@ print('Coefficients: \n', regr.coef_)
 rms = np.sqrt(np.mean(((regr.predict(Xdata_test)) - Ydata_test) ** 2))
 print('RMS:', rms)
 
-# Plot outputs
-plt.scatter((regr.predict(Xdata_test)), (Ydata_test), color='black')
+# Plot outputs (actual vs predicted)
+plt.scatter((Ydata_test), (regr.predict(Xdata_test)), color='black')
 
 # plot predicted=actual line on graph from (-50, -50) to (600, 600)
 plt.plot((-50, 600), (-50, 600), color='blue', linewidth=3)
